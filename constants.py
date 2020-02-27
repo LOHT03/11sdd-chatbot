@@ -1,9 +1,10 @@
 # Create a menu for customers to reference
 
-from typing import Dict, List, Tuple
+from controller.types import CompleteMenu, MenuItem
+from typing import Dict, List
 
-menu = {
-    "starters": {
+menu: CompleteMenu = {
+    "starter": {
         "snails": 1.20,
         "prawns": 3.00
     },
@@ -17,7 +18,7 @@ menu = {
     }
 }
 
-orders: Dict[str, Dict[int, List[Tuple[str, float]]]] = {
+orders: Dict[str, Dict[int, List[MenuItem]]] = {
     "Jim": {
         1: [("prawns", 1.20), ("steak", 16.00)]
     }
