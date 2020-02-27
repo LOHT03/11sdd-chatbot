@@ -1,4 +1,5 @@
-from typing import Tuple, Dict
+from typing import Tuple, Dict, List
+from terminaltables import AsciiTable
 
 
 MenuItem = Tuple[str, float]

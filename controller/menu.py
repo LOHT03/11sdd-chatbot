@@ -1,4 +1,5 @@
-from typing import Dict, Literal, Tuple, Union
+from controller.types import MenuItem
+from typing import List, Literal, Union
 from terminaltables import AsciiTable
 from constants import menu
 
@@ -23,3 +24,23 @@ class Menu:
         print()
         print(AsciiTable(tableData, course.capitalize() if course else "Menu").table)
         print()
+
+    @staticmethod
+    def displayTotals(items: List[MenuItem], tableName: str = None):
+        tableData = [("Meal", "Price")]
+        finalTotal: float = 0
+        for item in items:
+            tableData.append((item[0].capitalize(), f"${item[1]:.2f}"))
+            finalTotal += item[1]
+        tableData.append((str("------"), str("------")))
+        tableData.append(("TOTAL", f"${finalTotal:.2f}"))
+
+        print(AsciiTable(tableData, tableName).table)
+
+    @staticmethod
+    def getMeals() -> List[str]:
+        menuItems: List[str] = []
+        for course in menu.keys():
+            for item in menu[course].items():
+                menuItems.append(item[0])
+        return menuItems
