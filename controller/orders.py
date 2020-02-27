@@ -9,7 +9,7 @@ class Order:
 
     def addItem(self, meal: MenuItem) -> None:
         if meal[0].lower() not in Menu.getMeals():
-            raise ValueError(f"{meal[0]} is not a valid menu item.")
+            print(f"\"{meal[0].capitalize()}\" is not a valid menu item.")
         else:
             self.__orders.append(meal)
             print()
@@ -22,5 +22,5 @@ class Order:
         print()
         print("Here's your current order.")
         print()
-        Menu.displayTotals(self.__orders, "Order")
+        Menu.displayTotals(self.__orders, "Current Order")
         print()

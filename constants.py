@@ -4,17 +4,17 @@ from controller.types import CompleteMenu, MenuItem
 from typing import Dict, List
 
 menu: CompleteMenu = {
-    "starter": {
-        "snails": 1.20,
-        "prawns": 3.00
+    "entrees": {
+        "fairy bread": 3.00,
+        "witchetty grub": 5.00
     },
     "main": {
-        "steak": 16.00,
-        "lasagna": 15.00
+        "kangaroo": 16.00,
+        "meat pie": 7.00
     },
     "dessert": {
-        "cake": 6.00,
-        "jelly": 4.00
+        "tim tam": 0.50,
+        "pavlova": 4.00
     }
 }
 

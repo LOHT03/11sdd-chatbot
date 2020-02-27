@@ -1,12 +1,12 @@
 from controller.types import MenuItem
-from typing import List, Literal, Union
+from typing import Dict, List, Literal, Tuple, Union
 from terminaltables import AsciiTable
 from constants import menu
 
 
 class Menu:
     @staticmethod
-    def show(course: Union[Literal["starter", "main", "dessert", None]] = None):
+    def show(course: Union[Literal["entrees", "main", "dessert", None]] = None):
         tableData = [("Meal", "Price")]
         if course is not None:
             for meal in menu[course].items():
@@ -27,15 +27,29 @@ class Menu:
 
     @staticmethod
     def displayTotals(items: List[MenuItem], tableName: str = None):
-        tableData = [("Meal", "Price")]
+        tableData = [("Meal", "Qty", "Unit", "Price")]
         finalTotal: float = 0
-        for item in items:
-            tableData.append((item[0].capitalize(), f"${item[1]:.2f}"))
+        quantities: Dict[Tuple[str, float], int] = {}
+        finalQty = 0
+        for i in items:
+            item = (i[0].lower().capitalize(), i[1])
+            if item not in quantities.keys():
+                quantities[item] = 1
+            else:
+                quantities[item] += 1
             finalTotal += item[1]
-        tableData.append((str("------"), str("------")))
-        tableData.append(("TOTAL", f"${finalTotal:.2f}"))
-
-        print(AsciiTable(tableData, tableName).table)
+        for i in quantities.keys():
+            tableData.append(
+                (f"{i[0]}", f"{quantities[i]}", f"${i[1]:.2f}", f"${(i[1] * quantities[i]):.2f}"))
+            finalQty += quantities[i]
+        tableData.append(
+            ("TOTAL", f"{finalQty}", f"---", f"${finalTotal:.2f}"))
+        table = AsciiTable(tableData, tableName)
+        table.justify_columns[1] = "right"
+        table.justify_columns[2] = "right"
+        table.justify_columns[3] = "right"
+        table.inner_footing_row_border = True
+        print(table.table)
 
     @staticmethod
     def getMeals() -> List[str]:

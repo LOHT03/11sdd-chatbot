@@ -1,7 +1,10 @@
 from controller.orders import Order
-from controller.menu import Menu
 
 order = Order()
-order.addItem(("Steak", 12))
-order.addItem(("snails", 9.10))
+
+order.addItem(("fairy bread", 16))
+order.addItem(("pavlova", 4))
+order.addItem(("kangaroo", 12))
+order.addItem(("fairy bread", 16))
+
 order.showTotal()
