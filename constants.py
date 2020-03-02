@@ -18,8 +18,9 @@ menu: CompleteMenu = {
     }
 }
 
-orders: Dict[str, Dict[int, List[MenuItem]]] = {
-    "Jim": {
-        1: [("prawns", 1.20), ("steak", 16.00)]
+previousOrders: Dict[str, Dict[int, List[MenuItem]]] = {
+    "jim": {
+        1: [("prawns", 1.20), ("steak", 16.00)],
+        2: [("prawns", 1.20), ("prawns", 1.20), ("steak", 16.00)]
     }
 }

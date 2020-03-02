@@ -1,10 +1,11 @@
-from controller.orders import Order
+from stages.findStage import getNextStage
+from controller.customer import getCustomer
 
-order = Order()
 
-order.addItem(("fairy bread", 16))
-order.addItem(("pavlova", 4))
-order.addItem(("kangaroo", 12))
-order.addItem(("fairy bread", 16))
+print("Welcome to the AusBot ordering system.")
+print("We hope that you enjoy your meal.")
+print()
+print("Before we can begin ordering, we need to check if you have ordered with us before.")
 
-order.showTotal()
+customer = getCustomer()
+getNextStage()
