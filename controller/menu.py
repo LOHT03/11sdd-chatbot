@@ -17,12 +17,15 @@ class Menu:
                 tableData.append((c.capitalize(), str("******")))
                 for meal in menu[c].items():
                     tableData.append(
-                        (meal[0].capitalize(), str(f"${meal[1]:.2f}")))
+                        (meal[0].capitalize(), str(f"${meal[1]:5.2f}")))
                 tableData.append((str(""), str("")))
             tableData.pop()
 
+        table = AsciiTable(tableData, course.capitalize()
+                           if course else "Menu")
+        table.justify_columns[1] = "right"
         print()
-        print(AsciiTable(tableData, course.capitalize() if course else "Menu").table)
+        print(table.table)
         print()
 
     @staticmethod

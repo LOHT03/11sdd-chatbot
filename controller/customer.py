@@ -22,7 +22,7 @@ def getCustomer() -> Customer:
     nameConfirmed = "N"
     while nameConfirmed != "Y":
         nameConfirmed = input(
-            f"You entered \"{name}\". Is that correct? [Y/N]: ")
+            f"You entered \"{name}\". Is that correct? [Y/N]: ").upper()
         if nameConfirmed.upper() == "N":
             name = input("Please enter your name: ").lower()
 

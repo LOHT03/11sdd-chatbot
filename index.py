@@ -8,4 +8,4 @@ print()
 print("Before we can begin ordering, we need to check if you have ordered with us before.")
 
 customer = getCustomer()
-getNextStage()
+getNextStage(customer)
