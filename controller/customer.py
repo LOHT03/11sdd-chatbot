@@ -26,6 +26,7 @@ def getCustomer() -> Customer:
         if nameConfirmed.upper() == "N":
             name = input("Please enter your name: ").lower()
 
+    print()
     if name in previousOrders.keys():
         customer = Customer(name, previousOrders[name])
         print(f"Welcome back, {name.capitalize()}!")

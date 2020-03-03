@@ -5,8 +5,9 @@ from constants import menu
 
 
 class Menu:
+    courses = ["starter", "main", "dessert"]
     @staticmethod
-    def show(course: Union[Literal["entrees", "main", "dessert", None]] = None):
+    def show(course: Union[Literal["starter", "main", "dessert", None]] = None):
         tableData = [("Meal", "Price")]
         if course is not None:
             for meal in menu[course].items():

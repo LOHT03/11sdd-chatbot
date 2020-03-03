@@ -4,7 +4,7 @@ from controller.types import CompleteMenu, MenuItem
 from typing import Dict, List
 
 menu: CompleteMenu = {
-    "entrees": {
+    "starter": {
         "fairy bread": 3.00,
         "witchetty grub": 5.00
     },
