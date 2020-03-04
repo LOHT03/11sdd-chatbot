@@ -1,5 +1,5 @@
-from stages.findStage import getNextStage
 from controller.customer import getCustomer
+from stages.findStage import getNextStage
 
 
 print("Welcome to the AusBot ordering system.")

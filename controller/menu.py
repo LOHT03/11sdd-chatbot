@@ -1,22 +1,36 @@
-from controller.types import MenuItem
-from typing import Dict, List, Literal, Tuple, Union
+from typing import List,  Union
+
 from terminaltables import AsciiTable
-from constants import menu
+
+from controller.types import CompleteMenu, MenuItem
+from db.db import dbconn
 
 
 class Menu:
-    courses = ["starter", "main", "dessert"]
-    @staticmethod
-    def show(course: Union[Literal["starter", "main", "dessert", None]] = None):
+    def __init__(self) -> None:
+        data = dbconn.execute(
+            "SELECT courseName, dishName, dishPrice FROM courses, dishes WHERE courses.courseID = dishes.courseID")
+
+        self.menu: CompleteMenu = {}
+        self.courses: List[str] = []
+
+        for row in data:
+            if not row[0] in self.menu.keys():
+                self.menu[row[0]] = {}
+                self.courses.append(row[0])
+            self.menu[row[0]][row[1]] = float(row[2])
+
+    def show(self, course: Union[str, None] = None):
         tableData = [("Meal", "Price")]
+
         if course is not None:
-            for meal in menu[course].items():
+            for meal in self.menu[course].items():
                 tableData.append(
                     (meal[0].capitalize(), str(f"${meal[1]:.2f}")))
         else:
-            for c in menu.keys():
+            for c in self.menu.keys():
                 tableData.append((c.capitalize(), str("******")))
-                for meal in menu[c].items():
+                for meal in self.menu[c].items():
                     tableData.append(
                         (meal[0].capitalize(), str(f"${meal[1]:5.2f}")))
                 tableData.append((str(""), str("")))
@@ -33,19 +47,13 @@ class Menu:
     def displayTotals(items: List[MenuItem], tableName: str = None):
         tableData = [("Meal", "Qty", "Unit", "Price")]
         finalTotal: float = 0
-        quantities: Dict[Tuple[str, float], int] = {}
         finalQty = 0
         for i in items:
             item = (i[0].lower().capitalize(), i[1])
-            if item not in quantities.keys():
-                quantities[item] = 1
-            else:
-                quantities[item] += 1
             finalTotal += item[1]
-        for i in quantities.keys():
             tableData.append(
-                (f"{i[0]}", f"{quantities[i]}", f"${i[1]:.2f}", f"${(i[1] * quantities[i]):.2f}"))
-            finalQty += quantities[i]
+                (f"{i[0]}", f"{i[2]}", f"${i[1]:.2f}", f"${(i[1] * i[2]):.2f}"))
+            finalQty += i[2]
         tableData.append(
             ("TOTAL", f"{finalQty}", f"---", f"${finalTotal:.2f}"))
         table = AsciiTable(tableData, tableName)
@@ -55,10 +63,12 @@ class Menu:
         table.inner_footing_row_border = True
         print(table.table)
 
-    @staticmethod
-    def getMeals() -> List[str]:
+    def getMeals(self) -> List[str]:
         menuItems: List[str] = []
-        for course in menu.keys():
-            for item in menu[course].items():
+        for course in self.menu.keys():
+            for item in self.menu[course].items():
                 menuItems.append(item[0])
         return menuItems
+
+
+menuInstance = Menu()

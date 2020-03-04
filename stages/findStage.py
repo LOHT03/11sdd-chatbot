@@ -1,6 +1,7 @@
-from controller.customer import Customer
-from controller.menu import Menu
 from fuzzywuzzy import process
+
+from controller.customer import Customer
+from controller.menu import menuInstance
 
 possibleOptions = ["order some food", "see a menu", "see previous orders"]
 
@@ -23,20 +24,20 @@ def getNextStage(customer: Customer):
                 elif choice == "see a menu":
                     print()
                     courseInput = input(
-                        "What course would you like to see (starter, main, dessert)?: ")
+                        f"What course would you like to see? {menuInstance.courses}: ")
                     if len(courseInput) == 0:
                         print()
                         print("Here's the full menu.")
-                        Menu.show()
+                        menuInstance.show()
                     else:
                         (courseChoice, courseConfidence) = process.extractOne(
-                            courseInput, Menu.courses)
+                            courseInput, menuInstance.courses)
                         if courseConfidence >= 80:
                             print()
                             print()
                             print(
                                 f"Here's the {courseChoice} menu.")
-                            Menu.show(courseChoice)
+                            menuInstance.show(courseChoice)
                         else:
                             print("Sorry, we don't have that course available here.")
                 elif choice == "see previous orders":

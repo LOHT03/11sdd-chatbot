@@ -1,21 +1,27 @@
-from controller.menu import Menu
-from typing import List
+from typing import List, Tuple
+from uuid import uuid4
+
+from controller.menu import Menu, menuInstance
 from controller.types import MenuItem
 
 
 class Order:
     def __init__(self) -> None:
         self.__orders: List[MenuItem] = []
+        self.__id = str(uuid4())
 
-    def addItem(self, meal: MenuItem) -> None:
-        if meal[0].lower() not in Menu.getMeals():
+    def addItem(self, meal: Tuple[str, float]) -> None:
+        if meal[0].lower() not in menuInstance.getMeals():
             print(f"\"{meal[0].capitalize()}\" is not a valid menu item.")
         else:
-            self.__orders.append(meal)
+            [(x[0], x[1], x[2] + 1) if x[0] ==
+             meal[0] else x for x in self.__orders]
             print()
             print(f"{meal[0].capitalize()} has been added to your order!")
-            print(
-                f"There are currently {len(self.__orders)} item(s) on your order.")
+            print()
+            print("Here's your current order.")
+            print()
+            Menu.displayTotals(self.__orders, "Current Order")
             print()
 
     def showTotal(self):
@@ -24,3 +30,9 @@ class Order:
         print()
         Menu.displayTotals(self.__orders, "Current Order")
         print()
+
+    def orders(self):
+        return self.__orders
+
+    def id(self):
+        return self.__id
