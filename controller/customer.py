@@ -57,16 +57,16 @@ def getCustomer() -> Customer:
 
         # Get Previous Orders
         prevOrderData: List[Tuple[str, str, float, int]] = dbconn.execute("""
-        SELECT previousOrders.orderID,
-            dishName,
-            dishPrice,
-            quantity
-        FROM previousOrders,
-            orderedDishes,
-            customers
-        WHERE previousOrders.customerID = ? AND
-            orderedDishes.orderID = previousOrders.orderID
-        ORDER BY previousOrders.orderDate;
+        SELECT orderedDishes.orderID,
+            orderedDishes.dishName,
+            orderedDishes.dishPrice,
+            orderedDishes.quantity
+        FROM orderedDishes
+            JOIN
+            previousOrders ON orderedDishes.orderID = previousOrders.orderID
+            JOIN
+            customers ON previousOrders.customerID = customers.customerID
+        WHERE previousOrders.customerID = ?;
         """, (customerID,)).fetchall()
 
         previousOrders: Dict[str, List[MenuItem]] = {}
@@ -75,7 +75,7 @@ def getCustomer() -> Customer:
             if orderID not in previousOrders.keys():
                 previousOrders[orderID] = []
             previousOrders[orderID].append(
-                (dishName, float(dishPrice), int(dishQty)))
+                (dishName.capitalize(), float(dishPrice), int(dishQty)))
 
         customer = Customer(name, customerID, previousOrders)
         print(f"Welcome back, {name.capitalize()}!")

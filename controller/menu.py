@@ -1,4 +1,4 @@
-from typing import List,  Union
+from typing import Dict, List, Tuple,  Union
 
 from terminaltables import AsciiTable
 
@@ -13,12 +13,14 @@ class Menu:
 
         self.menu: CompleteMenu = {}
         self.courses: List[str] = []
+        self.__courselessMenu: Dict[str, float] = {}
 
         for row in data:
             if not row[0] in self.menu.keys():
                 self.menu[row[0]] = {}
                 self.courses.append(row[0])
             self.menu[row[0]][row[1]] = float(row[2])
+            self.__courselessMenu[row[1]] = float(row[2])
 
     def show(self, course: Union[str, None] = None):
         tableData = [("Meal", "Price")]
@@ -43,16 +45,29 @@ class Menu:
         print(table.table)
         print()
 
+    def getDish(self, dishName: str, course: str = None) -> Tuple[str, float]:
+        if course is None:
+            if dishName not in self.__courselessMenu:
+                raise ValueError("Meal does not exist.")
+            else:
+                return (dishName, self.__courselessMenu[dishName])
+        elif course not in self.courses:
+            raise ValueError("Course does not exist.")
+        else:
+            if dishName not in self.menu[course].keys():
+                raise ValueError("Dish does not exist within course.")
+            else:
+                return (dishName, self.menu[course][dishName])
+
     @staticmethod
     def displayTotals(items: List[MenuItem], tableName: str = None):
         tableData = [("Meal", "Qty", "Unit", "Price")]
         finalTotal: float = 0
         finalQty = 0
         for i in items:
-            item = (i[0].lower().capitalize(), i[1])
-            finalTotal += item[1]
+            finalTotal += (i[1]*i[2])
             tableData.append(
-                (f"{i[0]}", f"{i[2]}", f"${i[1]:.2f}", f"${(i[1] * i[2]):.2f}"))
+                (f"{i[0].capitalize()}", f"{i[2]}", f"${i[1]:.2f}", f"${(i[1] * i[2]):.2f}"))
             finalQty += i[2]
         tableData.append(
             ("TOTAL", f"{finalQty}", f"---", f"${finalTotal:.2f}"))

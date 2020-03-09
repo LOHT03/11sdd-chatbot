@@ -1,3 +1,5 @@
+from controller.orders import Order
+from stages.orderingStage import orderingStage
 from fuzzywuzzy import process
 
 from controller.customer import Customer
@@ -20,7 +22,7 @@ def getNextStage(customer: Customer):
                 choiceInput, possibleOptions)
             if confidence >= 80:
                 if choice == "order some food":
-                    print("Going to order food.")
+                    orderingStage(customer)
                 elif choice == "see a menu":
                     print()
                     courseInput = input(

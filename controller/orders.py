@@ -14,8 +14,11 @@ class Order:
         if meal[0].lower() not in menuInstance.getMeals():
             print(f"\"{meal[0].capitalize()}\" is not a valid menu item.")
         else:
-            [(x[0], x[1], x[2] + 1) if x[0] ==
-             meal[0] else x for x in self.__orders]
+            if any(meal[0] in x for x in self.__orders):
+                self.__orders = [(x[0], x[1], x[2] + 1) if x[0] ==
+                                 meal[0] else x for x in self.__orders]
+            else:
+                self.__orders.append((*meal, 1))
             print()
             print(f"{meal[0].capitalize()} has been added to your order!")
             print()
@@ -23,6 +26,9 @@ class Order:
             print()
             Menu.displayTotals(self.__orders, "Current Order")
             print()
+
+    def isValid(self):
+        return len(self.__orders) >= 3
 
     def showTotal(self):
         print()
