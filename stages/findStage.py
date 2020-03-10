@@ -1,4 +1,3 @@
-from controller.orders import Order
 from stages.orderingStage import orderingStage
 from fuzzywuzzy import process
 
@@ -16,6 +15,10 @@ def getNextStage(customer: Customer):
             "Would you like to order some food, see a menu, or see previous orders?: ")
         if len(choiceInput) == 0:
             continuation = False
+            print()
+            print("Thank you for your patronage, and enjoy your day!")
+            print()
+            print()
             break
         else:
             (choice, confidence) = process.extractOne(

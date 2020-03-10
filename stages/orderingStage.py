@@ -4,8 +4,9 @@ from controller.orders import Order
 from fuzzywuzzy import process
 
 
-def orderingStage(customer: Customer):
-    customerOrder = Order()
+def orderingStage(customer: Customer, existingOrder: Order = None):
+    customerOrder: Order = existingOrder if isinstance(
+        existingOrder, Order) else Order()
     isOrdering = True
     while isOrdering:
         option = input(
@@ -38,7 +39,7 @@ def orderingStage(customer: Customer):
                 if customerOrder.isValid():
                     print("You have enough items for a delivery.")
                     choice = input(
-                        "Would you like to purchase this order and deliver it? [Y/N]: ")
+                        "Would you like to purchase this order and deliver it? [Y/N]: ").upper()
                     if choice == "Y":
                         print()
                         print("Thanks for ordering!")
@@ -48,6 +49,22 @@ def orderingStage(customer: Customer):
                 else:
                     print(
                         "Unfortunately, you don't have enough items on your order, so we can't deliver this order yet.")
+                    willContinue = True
+                    while willContinue:
+                        continuationInput = input(
+                            "Would you like to continue with your order, or cancel the order?: ")
+                        (continuationChoice, continuationConfidence) = process.extractOne(
+                            continuationInput, ["continue with order", "cancel"])
+                        if continuationConfidence >= 80:
+                            if continuationChoice == "continue with order":
+                                willContinue = False
+                                return orderingStage(customer, customerOrder)
+                            elif continuationChoice == "cancel":
+                                print()
+                                print()
+                                print("No worries, we're cancelling this order.")
+                                print()
+                                willContinue = False
                     goingtoConfirm = False
 
             return

@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from controller.menu import Menu, menuInstance
 from controller.types import MenuItem
+from functools import reduce
 
 
 class Order:
@@ -28,7 +29,7 @@ class Order:
             print()
 
     def isValid(self):
-        return len(self.__orders) >= 3
+        return reduce(lambda a, b: a+b, [x[2] for x in self.__orders]) >= 3
 
     def showTotal(self):
         print()
@@ -37,6 +38,7 @@ class Order:
         Menu.displayTotals(self.__orders, "Current Order")
         print()
 
+    @property
     def orders(self):
         return self.__orders
 

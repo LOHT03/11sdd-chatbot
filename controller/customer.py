@@ -23,14 +23,14 @@ class Customer:
 
     def addOrder(self, order: Order):
         finalQuantity = 0
-        for d in order.orders():
+        for d in order.orders:
             finalQuantity += d[2]
         if (finalQuantity < 3):
             raise ValueError("Not enough items in the order.")
         else:
             dbconn.execute("INSERT INTO previousOrders VALUES (?,?,?)",
                            (order.id(), self.__id, str(datetime.now()),))
-            for d in order.orders():
+            for d in order.orders:
                 dbconn.execute(
                     "INSERT INTO orderedDishes (orderID, dishName, dishPrice, quantity) VALUES (?,?,?,?)", (order.id(), d[0], d[1], d[2]))
             dbconn.commit()

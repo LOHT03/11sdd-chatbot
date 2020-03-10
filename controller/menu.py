@@ -2,16 +2,22 @@ from typing import Dict, List, Tuple,  Union
 
 from terminaltables import AsciiTable
 
-from controller.types import CompleteMenu, MenuItem
+from controller.types import MenuItem
 from db.db import dbconn
 
 
 class Menu:
     def __init__(self) -> None:
-        data = dbconn.execute(
-            "SELECT courseName, dishName, dishPrice FROM courses, dishes WHERE courses.courseID = dishes.courseID")
+        data = dbconn.execute("""
+        SELECT courseName,
+            dishName,
+            dishPrice
+        FROM courses,
+            dishes
+        WHERE courses.courseID = dishes.courseID;
+        """)
 
-        self.menu: CompleteMenu = {}
+        self.menu = {}
         self.courses: List[str] = []
         self.__courselessMenu: Dict[str, float] = {}
 
