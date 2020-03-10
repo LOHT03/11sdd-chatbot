@@ -31,7 +31,6 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
                                 customerOrder.addItem(
                                     menuInstance.getDish(selectedDish))
         else:
-            print("Here's your current order.")
             print()
             customerOrder.showTotal()
             goingtoConfirm = True
@@ -39,13 +38,24 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
                 if customerOrder.isValid():
                     print("You have enough items for a delivery.")
                     choice = input(
-                        "Would you like to purchase this order and deliver it? [Y/N]: ").upper()
-                    if choice == "Y":
-                        print()
-                        print("Thanks for ordering!")
-                        customer.addOrder(customerOrder)
-                        print("We have saved your order to the file.")
-                        goingtoConfirm = False
+                        "Would you like to purchase this order and deliver it, add more items, or cancel the order?: ")
+                    print()
+                    if len(choice) != 0:
+                        (selectedChoice, selectedChoiceConfidence) = process.extractOne(
+                            choice, ["purchase", "add items", "cancel"])
+                        if selectedChoiceConfidence >= 80:
+                            if selectedChoice == "purchase":
+                                print("Thanks for ordering!")
+                                customer.addOrder(customerOrder)
+                                print("We have saved your order to the file.")
+                                goingtoConfirm = False
+                            elif selectedChoice == "add items":
+                                print(
+                                    "Alright, let's add some more items to your order.")
+                                return orderingStage(customer, customerOrder)
+                            elif selectedChoice == "cancel":
+                                print("Alright, we're cancelling this order.")
+                                break
                 else:
                     print(
                         "Unfortunately, you don't have enough items on your order, so we can't deliver this order yet.")
