@@ -29,7 +29,7 @@ def getNextStage(customer: Customer):
                 elif choice == "see a menu":
                     print()
                     courseInput = input(
-                        f"What course would you like to see? {menuInstance.courses}: ")
+                        f"What course would you like to see? {', '.join(menuInstance.courses)}: ")
                     if len(courseInput) == 0:
                         print()
                         print("Here's the full menu.")
