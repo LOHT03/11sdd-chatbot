@@ -186,7 +186,8 @@ class Menu:
         # Print the table to the console
         print(table.table)
 
-    def getDishes(self) -> List[str]:
+    @property
+    def dishes(self) -> List[str]:
         """Return all dishes in the instance menu.
 
         Returns:

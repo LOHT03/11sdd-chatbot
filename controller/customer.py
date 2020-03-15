@@ -31,10 +31,10 @@ class Customer:
             raise ValueError("Not enough items in the order.")
         else:
             dbconn.execute("INSERT INTO previousOrders VALUES (?,?,?)",
-                           (order.id(), self.__id, str(datetime.now()),))
+                           (order.id, self.__id, str(datetime.now()),))
             for d in order.orders:
                 dbconn.execute(
-                    "INSERT INTO orderedDishes (orderID, dishName, dishPrice, quantity) VALUES (?,?,?,?)", (order.id(), d[0], d[1], d[2]))
+                    "INSERT INTO orderedDishes (orderID, dishName, dishPrice, quantity) VALUES (?,?,?,?)", (order.id, d[0], d[1], d[2]))
             dbconn.commit()
 
 # TODO: Fix name input system

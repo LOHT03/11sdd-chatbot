@@ -35,7 +35,7 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
             customerOrder.showTotal()
             goingtoConfirm = True
             while goingtoConfirm:
-                if customerOrder.isValid():
+                if customerOrder.isValid:
                     print("You have enough items for a delivery.")
                     choice = input(
                         "Would you like to purchase this order and deliver it, add more items, or cancel the order?: ")
