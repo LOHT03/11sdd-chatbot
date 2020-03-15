@@ -210,4 +210,5 @@ class Menu:
         return menuItems
 
 
+# Create an instance of the menu on program load
 menuInstance = Menu()
