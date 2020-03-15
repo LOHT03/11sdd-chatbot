@@ -5,6 +5,12 @@ from fuzzywuzzy import process
 
 
 def orderingStage(customer: Customer, existingOrder: Order = None):
+    """
+    The ordering stage of the program. Takes a customer and an optional 
+    existing order for recursion.
+    """
+
+    # Check if an order was provided as a paramater
     customerOrder: Order = existingOrder if isinstance(
         existingOrder, Order) else Order()
     isOrdering = True

@@ -45,20 +45,25 @@ class Customer:
         # customers responsibility
 
         # Create a new order in the database
-        dbconn.execute("INSERT INTO previousOrders VALUES (?,?,?)",
-                       (order.id, self.__id, str(datetime.now()),))
+        dbconn.execute(
+            """
+            INSERT INTO previousOrders VALUES (?,?,?)
+            """, (order.id, self.__id, str(datetime.now()),))
 
         # Add each of the dishes in the order to the orderedDishes table in the
         # database
         for (dishName, price, qty) in order.orders:
             dbconn.execute(
-                """INSERT INTO orderedDishes (orderID, dishName, dishPrice, quantity)
-                VALUES (?,?,?,?)""", (order.id, dishName, price, qty))
+                """
+                INSERT INTO orderedDishes (orderID, dishName, dishPrice, quantity)
+                VALUES (?,?,?,?)
+                """, (order.id, dishName, price, qty))
 
         # Commit changes to the database
         dbconn.commit()
 
 # TODO: Fix name input system
+# ! Broken, need to fix
 
 
 def tokenizeInputAndGetName() -> str:
