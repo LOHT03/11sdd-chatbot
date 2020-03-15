@@ -29,14 +29,14 @@ def getNextStage(customer: Customer):
                 elif choice == "see a menu":
                     print()
                     courseInput = input(
-                        f"What course would you like to see? {', '.join(menuInstance.courses)}: ")
+                        f"What course would you like to see? {', '.join(menuInstance.menu.keys())}: ")
                     if len(courseInput) == 0:
                         print()
                         print("Here's the full menu.")
                         menuInstance.show()
                     else:
                         (courseChoice, courseConfidence) = process.extractOne(
-                            courseInput, menuInstance.courses)
+                            courseInput, menuInstance.menu.keys())
                         if courseConfidence >= 80:
                             print()
                             print()

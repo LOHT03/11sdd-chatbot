@@ -12,7 +12,7 @@ class Order:
         self.__id = str(uuid4())
 
     def addItem(self, meal: Tuple[str, float]) -> None:
-        if meal[0].lower() not in menuInstance.getMeals():
+        if meal[0].lower() not in menuInstance.getDishes():
             print(f"\"{meal[0].capitalize()}\" is not a valid menu item.")
         else:
             if any(meal[0] in x for x in self.__orders):

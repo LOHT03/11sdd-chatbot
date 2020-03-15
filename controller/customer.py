@@ -1,11 +1,13 @@
+from db.db import dbconn
+from controller.types import MenuItem, OrderHistory
+from controller.orders import Order
+from controller.menu import Menu
 from datetime import datetime
 from typing import Dict, List, Tuple
 from uuid import uuid4
 
-from controller.menu import Menu
-from controller.orders import Order
-from controller.types import MenuItem, OrderHistory
-from db.db import dbconn
+import en_core_web_sm
+tokenize = en_core_web_sm.load()
 
 
 class Customer:
@@ -35,19 +37,36 @@ class Customer:
                     "INSERT INTO orderedDishes (orderID, dishName, dishPrice, quantity) VALUES (?,?,?,?)", (order.id(), d[0], d[1], d[2]))
             dbconn.commit()
 
+# TODO: Fix name input system
 
-def getCustomer() -> Customer:
+
+def tokenizeInputAndGetName() -> str:
+    inputName = input("Please enter your name: ").lower() + " and."
+    nlpMatches = [(x.text, x.label_) for x in tokenize(inputName).ents]
+    while len(nlpMatches) == 0:
+        inputName = input("Please enter your name: ").lower() + " and."
+        nlpMatches = [(x.text, x.label_) for x in tokenize(inputName).ents]
+    if nlpMatches[0][1] == "PERSON":
+        return nlpMatches[0][0]
+    else:
+        return ""
+
+
+def confirmCustomerName() -> str:
     # Implement the sentence input structure
-    name = input("Please enter your name: ").lower()
+    inputName = tokenizeInputAndGetName()
     nameConfirmed = "N"
     while nameConfirmed != "Y":
         nameConfirmed = input(
-            f"You entered \"{name}\". Is that correct? [Y/N]: ").upper()
-        if nameConfirmed.upper() == "N":
-            name = input("Please enter your name: ").lower()
+            f"You entered \"{inputName}\". Is that correct? [Y/N]: ").upper()
+        if nameConfirmed.upper().startswith("N"):
+            inputName = tokenizeInputAndGetName()
+    return inputName
 
+
+def getCustomer() -> Customer:
+    name = confirmCustomerName()
     print()
-
     # Check db for name
     fetchedData = dbconn.execute(
         "SELECT customers.customerID FROM customers WHERE customers.customerName = ?", (name,)).fetchall()

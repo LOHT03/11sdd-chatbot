@@ -10,10 +10,10 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
     isOrdering = True
     while isOrdering:
         option = input(
-            f"What course would you like to order from? {menuInstance.courses}: ")
+            f"What course would you like to order from? {menuInstance.menu.keys()}: ")
         if len(option) != 0:
             (selectedCourse, confidence) = process.extractOne(
-                option, menuInstance.courses)
+                option, menuInstance.menu.keys())
             if confidence >= 80:
                 menuLoop = True
                 while menuLoop:
