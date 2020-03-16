@@ -59,13 +59,13 @@ class Menu:
                     (mealName.capitalize(), str(f"${mealPrice:.2f}")))
         else:
             # Get every dish for every course in the instance menu
-            for course in self.menu:
+            for courseName in self.menu:
 
                 # Add the course name as a heading within the table
-                tableData.append((course.capitalize(), str("******")))
+                tableData.append((courseName.capitalize(), str("******")))
 
                 # Iterate over dishes in the course
-                for meal in self.menu[course].items():
+                for meal in self.menu[courseName].items():
 
                     # Add the dish to the table data
                     tableData.append(

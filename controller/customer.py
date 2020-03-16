@@ -62,16 +62,31 @@ class Customer:
         # Commit changes to the database
         dbconn.commit()
 
-# TODO: Fix name input system
-# ! Broken, need to fix
+
+# DRY
+def getNameInput() -> str:
+    return input("Please enter your name: ").lower() + " and."
 
 
 def tokenizeInputAndGetName() -> str:
-    inputName = input("Please enter your name: ").lower() + " and."
+
+    # Ask the user to input their name
+    inputName = getNameInput()
+
+    # Run an NLP match for NAMES in the input
     nlpMatches = [(x.text, x.label_) for x in tokenize(inputName).ents]
+
+    # In the case where there are no matches (empty list)
     while len(nlpMatches) == 0:
-        inputName = input("Please enter your name: ").lower() + " and."
+
+        # Asks the user for the name again
+        inputName = getNameInput()
+
+        # Check again for any matches
         nlpMatches = [(x.text, x.label_) for x in tokenize(inputName).ents]
+
+    # If there are matches, check the first match and the second element of the
+    # match is a person
     if nlpMatches[0][1] == "PERSON":
         return nlpMatches[0][0]
     else:
@@ -81,12 +96,24 @@ def tokenizeInputAndGetName() -> str:
 def confirmCustomerName() -> str:
     # Implement the sentence input structure
     inputName = tokenizeInputAndGetName()
-    nameConfirmed = "N"
-    while nameConfirmed != "Y":
+
+    # Ask the user to confirm that the name they entered is correct
+    while True:
+
+        # Ask for user confirmation
         nameConfirmed = input(
-            f"You entered \"{inputName}\". Is that correct? [Y/N]: ").upper()
+            f"You entered \"{inputName}\". Is that correct? [Yes/No]: ").upper()
+
+        # Check user input if confirmed
         if nameConfirmed.upper().startswith("N"):
+
+            # If what they entered was wrong, ask for their name again
             inputName = tokenizeInputAndGetName()
+
+        elif nameConfirmed.upper().startswith("Y"):
+
+            # Break if they confirm
+            break
     return inputName
 
 
