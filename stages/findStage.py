@@ -1,3 +1,4 @@
+from controller.mSAPI import tts
 from stages.orderingStage import orderingStage
 from fuzzywuzzy import process
 
@@ -15,13 +16,14 @@ def getNextStage(customer: Customer):
         print()
 
         # Ask the customer what they would like to do
+        tts("Would you like to order some food, see a menu, or see previous orders?")
         choiceInput = input(
-            "Would you like to order some food, see a menu, or see previous orders?: ")
+            "> ")
 
         # Check if customer didn't enter anything
         if len(choiceInput) == 0:
             print()
-            print("Thank you for your patronage, and enjoy your day!")
+            tts("Thank you for your patronage, and enjoy your day!")
             print()
             print()
 
@@ -47,13 +49,15 @@ def getNextStage(customer: Customer):
                     print()
 
                     # Ask the customer which course they would like to see a menu
+
+                    tts("What course would you like to see?")
                     courseInput = input(
-                        f"What course would you like to see? {', '.join(menuInstance.menu.keys())}: ")
+                        f"{', '.join(menuInstance.menu.keys())}: ")
 
                     # Customer does not provide a course
                     if len(courseInput) == 0:
                         print()
-                        print("Here's the full menu.")
+                        tts("Here's the full menu.")
 
                         # Show the entire entire menu (all courses)
                         menuInstance.show()
@@ -64,14 +68,14 @@ def getNextStage(customer: Customer):
                         # Process user input for potential choice of course
                         # using fuzzy logic
                         (courseChoice, courseConfidence) = process.extractOne(
-                            courseInput, menuInstance.menu)
+                            courseInput, menuInstance.menu.keys())
 
                         # If the fuzzy logic is more than 80% confidence of a
                         # choice
                         if courseConfidence >= 80:
                             print()
                             print()
-                            print(
+                            tts(
                                 f"Here's the {courseChoice} menu.")
 
                             # Show the menu for the provided course
@@ -80,14 +84,14 @@ def getNextStage(customer: Customer):
 
                             # Course doesn't exist in the menu if fuzzy logic
                             # is unable to determine the course inputted
-                            print("Sorry, we don't have that course available here.")
+                            tts("Sorry, we don't have that course available here.")
 
                 elif choice == "see previous orders":
                     print()
 
                     # Check if the customer has any previous orders
                     if len(customer.previousOrders) == 0:
-                        print("Sorry, you don't have any previous orders with us.")
+                        tts("Sorry, you don't have any previous orders with us.")
                     else:
 
                         # Show the customers' previous orders in a table,
@@ -97,4 +101,4 @@ def getNextStage(customer: Customer):
             else:
 
                 # Unable to determine the input provided
-                print("Sorry, I don't understand what you would like to do.")
+                tts("Sorry, I don't understand what you would like to do.")

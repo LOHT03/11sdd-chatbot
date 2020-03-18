@@ -1,3 +1,4 @@
+from controller.mSAPI import tts
 from db.db import dbconn
 from controller.types import MenuItem, OrderHistory
 from controller.orders import Order
@@ -24,7 +25,7 @@ class Customer:
 
     def showPreviousOrders(self):
         """Display tables showing all previous orders of this customer, if any."""
-        print("Here are your previous orders with us:")
+        tts("Here are your previous orders with us:")
         print()
 
         # Iterate over all previous orders of the customer instance
@@ -65,6 +66,7 @@ class Customer:
 
 # DRY
 def getNameInput() -> str:
+    tts("Please enter your name", False)
     return input("Please enter your name: ").lower() + " and."
 
 
@@ -101,8 +103,9 @@ def confirmCustomerName() -> str:
     while True:
 
         # Ask for user confirmation
+        tts(f"You entered \"{inputName}\". Is that correct?")
         nameConfirmed = input(
-            f"You entered \"{inputName}\". Is that correct? [Yes/No]: ").upper()
+            f"[Yes/No]: ").upper()
 
         # Check user input if confirmed
         if nameConfirmed.upper().startswith("N"):
@@ -144,7 +147,7 @@ def getCustomer() -> Customer:
 
         # The fetched data is a List of strings, so get the first element and
         # save it to a variable as customerID
-        customerID = str(fetchedData[0])
+        customerID = fetchedData[0][0]
 
         # Get previous orders from the database
         # Returns in the format (courseName, dishName, dishPrice, Qty)
@@ -182,7 +185,7 @@ def getCustomer() -> Customer:
         customer = Customer(name, customerID, previousOrders)
 
         # Welcome the customer back in the console
-        print(f"Welcome back, {name.capitalize()}!")
+        tts(f"Welcome back, {name.title()}!")
 
         # Return the customer instance
         return customer
@@ -191,8 +194,7 @@ def getCustomer() -> Customer:
     else:
 
         # Welcome the customer
-        print(
-            f"Welcome, {name.capitalize()}. Thank you for choosing to order with us today.")
+        tts(f"Welcome, {name.title()}. Thank you for choosing to order with us today.")
 
         # Create a new ID for the customer
         customerID = str(uuid4())

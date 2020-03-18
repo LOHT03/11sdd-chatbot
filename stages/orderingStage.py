@@ -1,3 +1,4 @@
+from controller.mSAPI import tts
 from controller.customer import Customer
 from controller.menu import menuInstance
 from controller.orders import Order
@@ -17,8 +18,9 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
 
     while True:
         # Ask the customer what course they would like to order from
+        tts("What course would you like to order from?")
         option = input(
-            f"What course would you like to order from? {menuInstance.menu.keys()}: ")
+            f"{', '.join(menuInstance.menu.keys())}: ")
 
         # Check if the customer provided an input
         if len(option) != 0:
@@ -34,8 +36,9 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
 
                     # Ask the user if they would like to see a menu or to enter
                     # a meal they would like to order
+                    tts("What meal would you like to order, or would you like to see a menu?")
                     selectedDishInput = input(
-                        "What meal would you like? (Or would you like to see a menu?): ")
+                        "> ")
 
                     # Exit loop if they don't enter anything
                     if len(selectedDishInput) == 0:
@@ -74,12 +77,13 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
 
                 # If the order is valid
                 if customerOrder.isValid:
-                    print("You have enough items for a delivery.")
+                    tts("You have enough items for a delivery.")
 
                     # Ask the customer if they would like to add more items,
                     # deliver the order or cancel the order
+                    tts("Would you like to purchase this order and deliver it, add more items, or cancel the order?")
                     choice = input(
-                        "Would you like to purchase this order and deliver it, add more items, or cancel the order?: ")
+                        "> ")
                     print()
 
                     # If the user entered input
@@ -94,18 +98,18 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
 
                             # User wants to deliver the order
                             if selectedChoice == "deliver":
-                                print("Thanks for ordering!")
+                                tts("Thanks for ordering!")
 
                                 # Add the order for the customer on file
                                 customer.addOrder(customerOrder)
-                                print("We have saved your order to the file.")
+                                tts("We have saved your order to the file.")
 
                                 # Exit the loop
                                 break
 
                             # Customer chooses to add more items to the order
                             elif selectedChoice == "add items":
-                                print(
+                                tts(
                                     "Alright, let's add some more items to your order.")
 
                                 # Recurse back to the ordering stage with the
@@ -114,21 +118,22 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
 
                             # CUstomer wishes to cancel the order
                             elif selectedChoice == "cancel":
-                                print("Alright, we're cancelling this order.")
+                                tts("Alright, we're cancelling this order.")
 
                                 # Exit the loop
                                 break
 
                 # Not enough items in the order to complete a delivery
                 else:
-                    print(
+                    tts(
                         "Unfortunately, you don't have enough items on your order, so we can't deliver this order yet.")
                     while True:
 
                         # User input to continue adding items or to cancel
                         # the current order
+                        tts("Would you like to continue with your order, or cancel the order?")
                         continuationInput = input(
-                            "Would you like to continue with your order, or cancel the order?: ")
+                            "> ")
 
                         # Fuzzy process the user input to continue with the
                         # order or to cancel the order
@@ -146,7 +151,7 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
                             elif continuationChoice == "cancel":
                                 print()
                                 print()
-                                print("No worries, we're cancelling this order.")
+                                tts("No worries, we're cancelling this order.")
                                 print()
 
                                 # Exit out of the loop

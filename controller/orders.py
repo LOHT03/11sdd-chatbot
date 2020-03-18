@@ -1,3 +1,4 @@
+from controller.mSAPI import tts
 from typing import List, Tuple
 from uuid import uuid4
 
@@ -27,7 +28,7 @@ class Order:
 
         # Check if dish does not exist in the menu
         if dishName.lower() not in menuInstance.dishes:
-            print(f"\"{dishName.capitalize()}\" is not a valid menu item.")
+            tts(f"\"{dishName.capitalize()}\" is not a valid menu item.")
 
         # Dish does exist in the menu
         else:
@@ -46,9 +47,9 @@ class Order:
                 self.__orders.append((*dish, 1))
 
             print()
-            print(f"{dishName.capitalize()} has been added to your order!")
+            tts(f"{dishName.capitalize()} has been added to your order!")
             print()
-            print("Here's your current order.")
+            tts("Here's your current order.")
             print()
 
             # Print the current order to the console
