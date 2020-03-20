@@ -29,14 +29,17 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
             (selectedCourse, confidence) = process.extractOne(
                 option, menuInstance.menu.keys())
 
-            # Check if the package is more than 80% confident
-            if confidence >= 80:
+            # Check if the package is more than 60% confident
+            if confidence >= 60:
 
                 while True:
 
                     # Ask the user if they would like to see a menu or to enter
                     # a meal they would like to order
-                    tts("What meal would you like to order, or would you like to see a menu?")
+                    tts(
+                        f"What meal would you like to order from the {selectedCourse} course, or would you like to see a menu?")
+                    print(
+                        "(If nothing is entered, you can choose to order from a different course)")
                     selectedDishInput = input(
                         "> ")
 
@@ -65,6 +68,7 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
                                 # order
                                 customerOrder.addItem(
                                     menuInstance.getDish(selectedDish))
+                                break
 
         # No input was entered
         else:
@@ -81,7 +85,7 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
 
                     # Ask the customer if they would like to add more items,
                     # deliver the order or cancel the order
-                    tts("Would you like to purchase this order and deliver it, add more items, or cancel the order?")
+                    tts("Would you like to deliver this order, add more items, or cancel the order?")
                     choice = input(
                         "> ")
                     print()
@@ -94,7 +98,7 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
                             choice, ["deliver", "add items", "cancel"])
 
                         # If fuzzy logic is more than 80% confident
-                        if selectedChoiceConfidence >= 80:
+                        if selectedChoiceConfidence >= 60:
 
                             # User wants to deliver the order
                             if selectedChoice == "deliver":
@@ -121,7 +125,7 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
                                 tts("Alright, we're cancelling this order.")
 
                                 # Exit the loop
-                                break
+                                return
 
                 # Not enough items in the order to complete a delivery
                 else:
@@ -143,7 +147,7 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
                         if continuationConfidence >= 80:
 
                             # Customer chooses to continue with the order
-                            if continuationChoice == "continue with order":
+                            if continuationChoice == "continue":
                                 # Recurse back to the ordering stage
                                 return orderingStage(customer, customerOrder)
 
@@ -155,6 +159,6 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
                                 print()
 
                                 # Exit out of the loop
-                                break
+                                return
 
             return

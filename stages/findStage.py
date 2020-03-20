@@ -16,7 +16,8 @@ def getNextStage(customer: Customer):
         print()
 
         # Ask the customer what they would like to do
-        tts("Would you like to order some food, see a menu, or see previous orders?")
+        tts("Would you like to order some food, see a menu, or see your previous orders?")
+        print("(Leave empty to exit)")
         choiceInput = input(
             "> ")
 
