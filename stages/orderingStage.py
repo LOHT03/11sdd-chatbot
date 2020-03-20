@@ -138,7 +138,7 @@ def orderingStage(customer: Customer, existingOrder: Order = None):
                         # Fuzzy process the user input to continue with the
                         # order or to cancel the order
                         (continuationChoice, continuationConfidence) = process.extractOne(
-                            continuationInput, ["continue with order", "cancel"])
+                            continuationInput, ["continue", "cancel"])
 
                         if continuationConfidence >= 80:
 
