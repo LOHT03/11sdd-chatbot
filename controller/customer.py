@@ -12,21 +12,23 @@ tokenize = en_core_web_sm.load()
 
 
 class Customer:
-    def __init__(self, name: str, id: str,  previousOrders: OrderHistory):
+    def __init__(self, name: str, id: str):
 
         # Customer instance name
         self.name = name
 
-        # Previous orders of the customer instance
-        self.previousOrders = previousOrders
-
         # ID of the customer instance
         self.__id = id
+
+        # Previous orders of the customer instance
+        self.previousOrders = compilePreviousOrders(self.__id)
 
     def showPreviousOrders(self):
         """Display tables showing all previous orders of this customer, if any."""
         tts("Here are your previous orders with us:")
         print()
+
+        self.previousOrders = compilePreviousOrders(self.__id)
 
         # Iterate over all previous orders of the customer instance
         for order in self.previousOrders:
@@ -103,7 +105,7 @@ def confirmCustomerName() -> str:
     while True:
 
         # Ask for user confirmation
-        tts(f"You entered \"{inputName}\". Is that correct?")
+        tts(f"You entered \"{inputName.title()}\". Is that correct?")
         nameConfirmed = input(
             f"[Yes/No]: ").upper()
 
@@ -149,40 +151,8 @@ def getCustomer() -> Customer:
         # save it to a variable as customerID
         customerID = fetchedData[0][0]
 
-        # Get previous orders from the database
-        # Returns in the format (courseName, dishName, dishPrice, Qty)
-        prevOrderData: List[Tuple[str, str, float, int]] = dbconn.execute("""
-        SELECT orderedDishes.orderID,
-            orderedDishes.dishName,
-            orderedDishes.dishPrice,
-            orderedDishes.quantity
-        FROM orderedDishes
-            JOIN
-            previousOrders ON orderedDishes.orderID = previousOrders.orderID
-            JOIN
-            customers ON previousOrders.customerID = customers.customerID
-        WHERE previousOrders.customerID = ?;
-        """, (customerID,)).fetchall()
-
-        # Create a variable to hold the previous orders for the customer
-        previousOrders: Dict[str, List[MenuItem]] = {}
-
-        # Parse the database information to the dictionary
-        for (orderID, dishName, dishPrice, dishQty) in prevOrderData:
-
-            # If the ID does not exist in the dictionary
-            if orderID not in previousOrders:
-
-                # Initialise the ID in the dictionary to an empty list
-                previousOrders[orderID] = []
-
-            # Add each dish in the order to the corresponding ID in the
-            # dictionary
-            previousOrders[orderID].append(
-                (dishName.capitalize(), float(dishPrice), int(dishQty)))
-
         # Instantiate a new customer instance using the collected data
-        customer = Customer(name, customerID, previousOrders)
+        customer = Customer(name, customerID)
 
         # Welcome the customer back in the console
         tts(f"Welcome back, {name.title()}!")
@@ -194,7 +164,8 @@ def getCustomer() -> Customer:
     else:
 
         # Welcome the customer
-        tts(f"Welcome, {name.title()}. Thank you for choosing to order with us today.")
+        tts(
+            f"It seems this is your first time ordering with us, {name.title()}. Thank you for choosing to order with us today.")
 
         # Create a new ID for the customer
         customerID = str(uuid4())
@@ -208,4 +179,41 @@ def getCustomer() -> Customer:
 
         # Return the a created instace of the customer with an empty dictionary
         # for the customer's previous orders
-        return Customer(name, customerID, {})
+        return Customer(name, customerID)
+
+
+def compilePreviousOrders(customerID: str) -> Dict[str, List[MenuItem]]:
+    # Get previous orders from the database
+    # Returns in the format (courseName, dishName, dishPrice, Qty)
+    prevOrderData: List[Tuple[str, str, float, int]] = dbconn.execute(
+        """
+        SELECT orderedDishes.orderID,
+            orderedDishes.dishName,
+            orderedDishes.dishPrice,
+            orderedDishes.quantity
+        FROM orderedDishes
+            JOIN
+            previousOrders ON orderedDishes.orderID = previousOrders.orderID
+            JOIN
+            customers ON previousOrders.customerID = customers.customerID
+        WHERE previousOrders.customerID = ?;
+    """, (customerID,)).fetchall()
+
+    # Create a variable to hold the previous orders for the customer
+    previousOrders: Dict[str, List[MenuItem]] = {}
+
+    # Parse the database information to the dictionary
+    for (orderID, dishName, dishPrice, dishQty) in prevOrderData:
+
+        # If the ID does not exist in the dictionary
+        if orderID not in previousOrders:
+
+            # Initialise the ID in the dictionary to an empty list
+            previousOrders[orderID] = []
+
+        # Add each dish in the order to the corresponding ID in the
+        # dictionary
+        previousOrders[orderID].append(
+            (dishName.capitalize(), float(dishPrice), int(dishQty)))
+
+    return previousOrders

@@ -3,7 +3,7 @@ from controller.customer import getCustomer
 from stages.findStage import getNextStage
 
 
-tts("Welcome to the AusBot ordering system.")
+tts("Welcome to the OzBot ordering system.")
 tts("We hope that you enjoy your meal.")
 print()
 tts("Before we can begin ordering, we need to check if you have ordered with us before.")

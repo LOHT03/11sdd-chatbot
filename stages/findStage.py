@@ -5,7 +5,7 @@ from fuzzywuzzy import process
 from controller.customer import Customer
 from controller.menu import menuInstance
 
-possibleOptions = ["order some food", "see a menu", "see previous orders"]
+possibleOptions = ["order some food", "a menu", "previous orders"]
 
 
 def getNextStage(customer: Customer):
@@ -16,7 +16,8 @@ def getNextStage(customer: Customer):
         print()
 
         # Ask the customer what they would like to do
-        tts("Would you like to order some food, see a menu, or see previous orders?")
+        tts("Would you like to order some food, see a menu, or see your previous orders?")
+        print("(Leave empty to exit)")
         choiceInput = input(
             "> ")
 
@@ -45,7 +46,7 @@ def getNextStage(customer: Customer):
                     # Send the customer to the ordering stage
                     orderingStage(customer)
 
-                elif choice == "see a menu":
+                elif choice == "a menu":
                     print()
 
                     # Ask the customer which course they would like to see a menu
@@ -86,7 +87,7 @@ def getNextStage(customer: Customer):
                             # is unable to determine the course inputted
                             tts("Sorry, we don't have that course available here.")
 
-                elif choice == "see previous orders":
+                elif choice == "previous orders":
                     print()
 
                     # Check if the customer has any previous orders

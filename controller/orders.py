@@ -62,12 +62,15 @@ class Order:
 
         # Return the result of a reducer function that reduces all items in the
         # order and returns the total quantity
-        return reduce(lambda a, b: a+b, [qty for (dishName, price, qty) in self.__orders]) >= 3
+        if len(self.__orders) == 0:
+            return False
+        else:
+            return reduce(lambda a, b: a+b, [qty for (dishName, price, qty) in self.__orders]) >= 3
 
     def showTotal(self):
         """Show the total for the order."""
         print()
-        print("Here's your current order.")
+        tts("Here's your current order.")
         print()
 
         # Print the current order to the console
